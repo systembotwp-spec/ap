@@ -2387,7 +2387,7 @@ const handleCheckout = useCallback(async () => {
 
       {/* NAV */}
       <nav className="nav">
-        <img className="nav-logo tap" src="/Logo.png" alt="ElAmigodelPerro — volver al inicio" onClick={() => goTo("inicio")} />
+        <img className="nav-logo tap" src="/AMIGO_LOGO.png" alt="ElAmigodelPerro — volver al inicio" onClick={() => goTo("inicio")} />
         <div className="nav-links">
           <button className={`nav-link tap ${view==="inicio"?"active":""}`} onClick={() => goTo("inicio")}>Inicio</button>
           <button className={`nav-link tap ${view==="catalogo"?"active":""}`} onClick={() => goTo("catalogo")}>Tienda</button>
