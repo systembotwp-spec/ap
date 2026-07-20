@@ -2445,7 +2445,7 @@ const handleCheckout = useCallback(async () => {
         <>
           {/* Hero desktop */}
           <div className="hero">
-            <img className="hero-img" src="/Ap-banner.png"
+            <img className="hero-img" src="/ap-banner.png"
               alt="ElAmigodelPerro — Todo lo que tu mascota necesita en un solo lugar" />
             <div className="hero-overlay" aria-hidden="true">
               <div className="hero-content">
