@@ -747,7 +747,7 @@ const SERVICIOS = [
   },
 ];
 
-const WHATSAPP_NUMBER = "573016538381";
+const WHATSAPP_NUMBER = "573127339693";
 const waLink = (mensaje) => `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(mensaje)}`;
 
 /* ════════════════════════════════════════════════════════
@@ -2433,9 +2433,9 @@ const handleCheckout = useCallback(async () => {
             </button>
             <div className="mobile-menu-divider" />
             <p className="mobile-menu-label">Contacto</p>
-            <a className="mobile-menu-item tap" href="tel:+573016538381"><Phone size={15} /> 301 653 83 81</a>
+            <a className="mobile-menu-item tap" href="tel:+573127339693"><Phone size={15} /> 301 653 83 81</a>
             <a className="mobile-menu-item tap" href="mailto:elamigodelperro01@gmail.com"><Mail size={15} /> elamigodelperro01@gmail.com</a>
-            <a className="mobile-menu-item tap" href="https://wa.me/573016538381" target="_blank" rel="noreferrer"><MessageCircle size={15} /> WhatsApp</a>
+            <a className="mobile-menu-item tap" href="https://wa.me/573127339693" target="_blank" rel="noreferrer"><MessageCircle size={15} /> WhatsApp</a>
           </nav>
         </div>
       )}
@@ -3072,7 +3072,7 @@ const handleCheckout = useCallback(async () => {
             <Instagram size={16} />
           </a>
           <a className="footer-social-btn"
-            href="https://wa.me/573016538381"
+            href="https://wa.me/573127339693"
             target="_blank" rel="noreferrer" aria-label="WhatsApp de ElAmigodelPerro">
             <MessageCircle size={16} />
           </a>
@@ -3363,7 +3363,7 @@ const handleCheckout = useCallback(async () => {
 
 
       {/* WhatsApp flotante */}
-      <a className="wa-btn tap" href="https://wa.me/573016538381"
+      <a className="wa-btn tap" href="https://wa.me/573127339693"
         target="_blank" rel="noreferrer" aria-label="Contactar a ElAmigodelPerro por WhatsApp">
         <MessageCircle size={28} aria-hidden="true" />
       </a>
