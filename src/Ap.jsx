@@ -500,11 +500,11 @@ const SHEETS_CONFIG = {
 };
 
 const SHIPPING = {
-  "Cliente Guardería": 0,
+  "Soy Cliente Guardería": 0,
   "Área Metropolitana Sur": 12000,
   "Área Metropolitana Norte": 18000,
   "Área Metropolitana Oriente": 10000,
-  "Área Metropolitana Sur": 20000,
+  "Área Metropolitana Occidente": 20000,
   "Resto del País": null,
 };
 
