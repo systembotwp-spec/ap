@@ -500,14 +500,17 @@ const SHEETS_CONFIG = {
 };
 
 const SHIPPING = {
-  "Área Metropolitana": 15000,
-  "Periferias Área Metro..": null,
+  "Cliente Guardería": 0,
+  "Área Metropolitana Sur": 12000,
+  "Área Metropolitana Norte": 18000,
+  "Área Metropolitana Oriente": 10000,
+  "Área Metropolitana Sur": 20000,
   "Resto del País": null,
 };
 
 const PAYMENT_METHODS = [
   "Transferencia bancaria",
-  "Wompi",
+  "Tarjeta de Credito",
 ];
 
 const createOrderId = () => {
@@ -3124,7 +3127,7 @@ const handleCheckout = useCallback(async () => {
             <MessageCircle size={16} />
           </a>
         </div>
-        <p className="footer-signature">© 2025 El Amigo del Perro · Hecho en Colombia</p>
+        <p className="footer-signature">© 2025 El Amigo del Perro · Hecho en Colombia - Variante Palmas (Vereda el Cerro - Santa Elena (Antioquia)) </p>
       </footer>
 
       {/* CART DRAWER */}
