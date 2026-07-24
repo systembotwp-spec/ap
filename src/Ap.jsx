@@ -2492,7 +2492,7 @@ const handleCheckout = useCallback(async () => {
                   </button>
                   <a
                     className="home-servicio-wa-btn tap"
-                    href={waLink(`Hola, quiero reservar el servicio de ${title} para mi mascota 🐾`)}
+                    href={waLink(`Hola, quiero mas información sobre el servicio de ${title} para mi mascota 🐾`)}
                     target="_blank"
                     rel="noreferrer"
                     aria-label={`Reservar ${title} por WhatsApp`}
@@ -2683,7 +2683,7 @@ const handleCheckout = useCallback(async () => {
 
                 <a
                   className="servicio-reservar-btn tap"
-                  href={waLink(`Hola, quiero reservar el servicio de ${title} para mi mascota 🐾`)}
+                  href={waLink(`Hola, quiero mas información sobre el servicio de ${title} para mi mascota 🐾`)}
                   target="_blank"
                   rel="noreferrer"
                   aria-label={`Reservar ${title} por WhatsApp`}
