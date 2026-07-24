@@ -636,6 +636,47 @@ const TRUST = [
   { icon: Zap,    title:"Envíos Rápidos",        sub:"24–48h"        },
 ];
 
+/**
+ * Bloquea el scroll del body mientras `active` es true, de forma segura en iOS Safari.
+ * `overflow:hidden` en el body NO evita el scroll de fondo en iOS y además puede
+ * dejar "congelados" los gestos táctiles dentro de elementos con scroll propio
+ * (p. ej. la galería horizontal del modal de producto). La técnica correcta en
+ * iOS es fijar el body con `position:fixed` guardando el scroll actual, y
+ * restaurarlo al cerrar.
+ */
+function useBodyScrollLock(active) {
+  useEffect(() => {
+    if (!active) return;
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    const body = document.body;
+    const prev = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      right: body.style.right,
+      width: body.style.width,
+      overflow: body.style.overflow,
+    };
+
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+    body.style.overflow = "hidden";
+
+    return () => {
+      body.style.position = prev.position;
+      body.style.top = prev.top;
+      body.style.left = prev.left;
+      body.style.right = prev.right;
+      body.style.width = prev.width;
+      body.style.overflow = prev.overflow;
+      window.scrollTo(0, scrollY);
+    };
+  }, [active]);
+}
+
 /* ════════════════════════════════════════════════════════
    SERVICIOS — El Amigo del Perro (Hotel · Guardería ·
    Adiestramiento · Spa · Transporte)
@@ -1104,6 +1145,7 @@ const injectStyles = () => (
     .pdmodal-imgs {
       display:flex; overflow-x:auto; scroll-snap-type:x mandatory;
       scrollbar-width:none; overscroll-behavior-x:contain;
+      -webkit-overflow-scrolling:touch; touch-action:pan-x;
     }
     .pdmodal-imgs::-webkit-scrollbar { display:none; }
     .pdmodal-img {
@@ -1134,6 +1176,7 @@ const injectStyles = () => (
     .pdmodal-body {
       flex:1; overflow-y:auto; padding:22px 24px 28px;
       display:flex; flex-direction:column; gap:10px;
+      -webkit-overflow-scrolling:touch;
     }
     .pdmodal-cat {
       font-family:var(--f-body); font-size:var(--t-label); font-weight:var(--w-semi);
@@ -2116,11 +2159,10 @@ const handleCheckout = useCallback(async () => {
     }
   }, [cart, customer, orderSaving, shippingZone, subtotal, shipCost, grandTotal, toast, recurringOrder, recurringDate]);
 
+  useBodyScrollLock(drawerOpen);
+
   useEffect(() => {
     if (!drawerOpen) return;
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
 
     const onKeyDown = (event) => {
       if (event.key === "Escape") setDrawerOpen(false);
@@ -2129,7 +2171,6 @@ const handleCheckout = useCallback(async () => {
     window.addEventListener("keydown", onKeyDown);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [drawerOpen]);
@@ -2440,6 +2481,10 @@ const handleCheckout = useCallback(async () => {
         </div>
       )}
       
+      {/* Vistas principales — se ocultan mientras se muestra una política,
+          así la política queda como único contenido y aparece arriba */}
+      {!policyView && (
+        <>
       {/* ══ INICIO ══ */}
       {view === "inicio" && (
         <>
@@ -3000,6 +3045,8 @@ const handleCheckout = useCallback(async () => {
           </div>
         </section>
       )}
+        </>
+      )}
 
       {/* ══ POLÍTICAS ══ */}
       {policyView && (
@@ -3497,12 +3544,8 @@ function ProductDetailModal({ p, onAdd, onClose }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  /* Bloquear scroll del body mientras el modal está abierto */
-  useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = prev; };
-  }, []);
+  /* Bloquear scroll del body mientras el modal está abierto (seguro en iOS) */
+  useBodyScrollLock(true);
 
   const handleAdd = () => {
     const productImage = imageList[0];
