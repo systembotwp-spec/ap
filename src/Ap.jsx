@@ -708,8 +708,8 @@ const SERVICIOS = [
       "Recreación dirigida",
     ],
     precio: [
-      { label: "1 a 7 días",   valor: "$50.000 por día" },
-      { label: "8 a 15 días",  valor: "$45.000 por día" },
+      { label: "1 a 7 días",   valor: "$60.000 por día" },
+      { label: "8 a 15 días",  valor: "$50.000 por día" },
       { label: "16 a 29 días", valor: "$40.000 por día" },
       { label: "Mensualidad",  valor: "$900.000 ($30.000 por día)" },
     ],
@@ -746,6 +746,7 @@ const SERVICIOS = [
       "Actividades programadas para el día correspondiente",
       "Recreación dirigida",
       "Spa",
+      "Modificación de Comportamiento (Valor según Evaluación)",
     ],
     precio: [
       { label: "Cachorros", valor: "$900.000" },
@@ -774,20 +775,19 @@ const SERVICIOS = [
       { label: "Perros pequeños", valor: "$75.000" },
       { label: "Perros medianos", valor: "$80.000" },
       { label: "Perros grandes",  valor: "$90.000" },
-      { label: "Perros gigantes", valor: "$100.000" },
+      { label: "Perros gigantes", valor: "$120.000" },
     ],
   },
   {
     id: "transporte",
     icon: Truck,
     title: "Transporte",
-    desde: "Incluido en planes de Spa",
+    desde: "Aplica para todos los Servicios",
     incluye: [
-      "Incluido sin costo adicional en todos los planes de Spa",
-      "Disponible para los demás servicios con un valor adicional según la ubicación de la vivienda",
+    "Disponible para todos los servicios con un valor adicional según la ubicación de la vivienda",
     ],
     precio: [],
-    nota: "El servicio de transporte solo está incluido en los planes de spa; para los otros servicios el transporte tiene un valor adicional que depende del lugar donde esté ubicada la vivienda del perrit@.",
+    nota: "El transporte tiene un valor adicional que depende del lugar donde esté ubicada la vivienda del perrit@.",
   },
 ];
 
