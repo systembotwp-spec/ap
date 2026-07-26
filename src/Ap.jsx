@@ -739,6 +739,7 @@ const SERVICIOS = [
     icon: GraduationCap,
     title: "Adiestramiento",
     desde: "Desde $900.000",
+    waLabel: "Agenda la valoración de tu mascota",
     incluye: [
       "Clases personalizadas",
       "Habitación individual y/o grupal",
@@ -896,6 +897,30 @@ const injectStyles = () => (
       cursor:pointer; color:${C.textMuted}; border:none; background:none; padding:0; transition:color .2s;
     }
     .nav-link:hover,.nav-link.active { color:${C.redDark}; }
+    .nav-dropdown { position:relative; display:flex; align-items:center; }
+    .nav-dropdown > .nav-link { display:flex; align-items:center; gap:3px; }
+    .nav-dropdown-menu {
+      position:absolute; top:100%; left:50%; transform:translateX(-50%) translateY(4px);
+      min-width:200px; background:#fff; border:1.5px solid ${C.border}; border-radius:12px;
+      box-shadow:0 12px 30px rgba(107,20,35,.14); padding:8px;
+      display:flex; flex-direction:column; gap:2px;
+      opacity:0; visibility:hidden; pointer-events:none;
+      transition:opacity .18s, visibility .18s, transform .18s;
+      z-index:60;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown:focus-within .nav-dropdown-menu {
+      opacity:1; visibility:visible; pointer-events:auto; transform:translateX(-50%) translateY(0);
+    }
+    .nav-dropdown-menu button {
+      font-family:var(--f-body); font-size:13px; font-weight:var(--w-semi); text-align:left;
+      color:${C.text}; background:none; border:none; cursor:pointer; padding:9px 12px;
+      border-radius:8px; white-space:nowrap; transition:background .15s, color .15s;
+    }
+    .nav-dropdown-menu button:hover { background:${C.redMist}; color:${C.redDark}; }
+    @media (max-width:640px) {
+      .nav-dropdown { display:none; }
+    }
     .cart-trigger {
       position:relative; background:${C.redDark}; color:#fff;
       border:none; border-radius:50px; padding:9px 18px;
@@ -1497,9 +1522,9 @@ const injectStyles = () => (
     .home-servicio-link:hover { color:${C.redDark}; }
     .home-servicio-wa-btn {
       display:flex; align-items:center; justify-content:center; gap:6px; width:100%;
-      margin-top:6px; padding:9px; border-radius:50px; background:${C.whatsapp}; color:#fff;
-      text-decoration:none; font-family:var(--f-body); font-size:12px; font-weight:var(--w-bold);
-      transition:background .2s, transform .2s;
+      margin-top:6px; padding:8px 10px; border-radius:14px; background:${C.whatsapp}; color:#fff;
+      text-decoration:none; font-family:var(--f-body); font-size:11px; font-weight:var(--w-bold);
+      line-height:1.25; text-align:center; transition:background .2s, transform .2s;
     }
     .home-servicio-wa-btn:hover { background:#1fb956; transform:translateY(-1px); }
     @media (max-width:640px) {
@@ -2438,6 +2463,23 @@ const handleCheckout = useCallback(async () => {
           <button className={`nav-link tap ${view==="servicios"?"active":""}`} onClick={() => goTo("servicios")}>Servicios</button>
           <button className={`nav-link tap ${view==="mipedido"?"active":""}`} onClick={() => goTo("mipedido")}>Mi Pedido</button>
           <button className={`nav-link tap ${view==="entregadores"?"active":""}`} onClick={() => goTo("entregadores")}>Entregadores</button>
+          {/* Políticas — dropdown, solo escritorio */}
+          <div className="nav-dropdown">
+            <button className={`nav-link tap ${policyView?"active":""}`} aria-haspopup="true">
+              Políticas <ChevronRight size={13} style={{transform:"rotate(90deg)"}} aria-hidden="true" />
+            </button>
+            <div className="nav-dropdown-menu" role="menu">
+              <button role="menuitem" onClick={() => { setPolicyView("envios"); window.scrollTo({top:0,behavior:"smooth"}); }}>
+                Política de envíos
+              </button>
+              <button role="menuitem" onClick={() => { setPolicyView("devoluciones"); window.scrollTo({top:0,behavior:"smooth"}); }}>
+                Cambios y devoluciones
+              </button>
+              <button role="menuitem" onClick={() => { setPolicyView("datos"); window.scrollTo({top:0,behavior:"smooth"}); }}>
+                Protección de datos
+              </button>
+            </div>
+          </div>
           {/* Hamburger — solo móvil */}
           <button className="nav-hamburger tap" onClick={() => setMobileMenuOpen(v => !v)} aria-label="Abrir menú" aria-expanded={mobileMenuOpen}>
             <Menu size={22} aria-hidden="true" />
@@ -2530,7 +2572,7 @@ const handleCheckout = useCallback(async () => {
               <h2 className="section-title" id="home-serv-h">Nuestros <em>Servicios</em></h2>
             </div>
             <div className="home-servicios-scroll" role="list" aria-label="Servicios disponibles">
-              {SERVICIOS.map(({ id, icon: Icon, title, desde }) => (
+              {SERVICIOS.map(({ id, icon: Icon, title, desde, waLabel }) => (
                 <div key={id} className="home-servicio-card" role="listitem">
                   <div className="home-servicio-icon-wrap" aria-hidden="true"><Icon size={22} color="#fff" /></div>
                   <h3 className="home-servicio-title">{title}</h3>
@@ -2543,10 +2585,10 @@ const handleCheckout = useCallback(async () => {
                     href={waLink(`Hola, quiero mas información sobre el servicio de ${title} para mi mascota 🐾`)}
                     target="_blank"
                     rel="noreferrer"
-                    aria-label={`Reservar ${title} por WhatsApp`}
+                    aria-label={waLabel ? waLabel : `Reservar ${title} por WhatsApp`}
                   >
                     <MessageCircle size={14} aria-hidden="true" />
-                    Reservar
+                    {waLabel ? waLabel : "Reservar"}
                   </a>
                 </div>
               ))}
@@ -2697,7 +2739,7 @@ const handleCheckout = useCallback(async () => {
 
           {/* Tarjetas de servicios */}
           <div className="servicios-grid">
-            {SERVICIOS.map(({ id, icon: Icon, title, incluye, precio, nota }) => (
+            {SERVICIOS.map(({ id, icon: Icon, title, incluye, precio, nota, waLabel }) => (
               <article key={id} className="servicio-card">
                 <div className="servicio-card-head">
                   <div className="servicio-icon-wrap" aria-hidden="true"><Icon size={22} color="#fff" /></div>
@@ -2734,10 +2776,10 @@ const handleCheckout = useCallback(async () => {
                   href={waLink(`Hola, quiero mas información sobre el servicio de ${title} para mi mascota 🐾`)}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label={`Reservar ${title} por WhatsApp`}
+                  aria-label={waLabel ? waLabel : `Reservar ${title} por WhatsApp`}
                 >
                   <MessageCircle size={15} aria-hidden="true" />
-                  Reservar {title} por WhatsApp
+                  {waLabel ? waLabel : `Reservar ${title} por WhatsApp`}
                 </a>
               </article>
             ))}
