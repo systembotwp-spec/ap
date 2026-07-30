@@ -108,10 +108,17 @@ const FALLBACK_IMG =
  *  - Comillas envolventes pegadas por error al copiar el link.
  *  - Enlaces "http://" que el navegador bloquea por contenido mixto en un
  *    sitio servido por https (más estricto en navegadores móviles).
- *  - Links para compartir de Google Drive (…/file/d/ID/view o
- *    drive.google.com/open?id=ID), que NO son imágenes directas y por eso
- *    nunca cargan dentro de una etiqueta <img>. Se convierten al formato
- *    de vista directa que sí funciona como imagen.
+ *  - Links de Google Drive en cualquiera de sus formatos de "compartir"
+ *    (…/file/d/ID/view, drive.google.com/open?id=ID o
+ *    lh3.googleusercontent.com/d/ID). Ninguno de estos es una imagen
+ *    directa pensada para hotlinking público: dependen de que el
+ *    navegador tenga una sesión de Google activa y de límites de uso
+ *    por IP — por eso pueden "funcionar" en un PC ya logueado en Google
+ *    pero fallar en un celular con datos móviles (los operadores
+ *    comparten IP entre muchos usuarios, lo que dispara los límites de
+ *    Google). Se convierten al endpoint oficial de miniaturas de Drive
+ *    (drive.google.com/thumbnail), que es público, no requiere sesión y
+ *    entrega una imagen ya redimensionada (más liviana en datos móviles).
  */
 const normalizeImageUrl = (raw) => {
   if (!raw) return "";
@@ -122,8 +129,9 @@ const normalizeImageUrl = (raw) => {
 
   const driveFileMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/i);
   const driveOpenMatch = url.match(/drive\.google\.com\/open\?id=([^&]+)/i);
-  const driveId = driveFileMatch?.[1] || driveOpenMatch?.[1];
-  if (driveId) return `https://drive.google.com/uc?export=view&id=${driveId}`;
+  const driveLh3Match  = url.match(/lh3\.googleusercontent\.com\/d\/([^/?&]+)/i);
+  const driveId = driveFileMatch?.[1] || driveOpenMatch?.[1] || driveLh3Match?.[1];
+  if (driveId) return `https://drive.google.com/thumbnail?id=${driveId}&sz=w1000`;
 
   return url;
 };
