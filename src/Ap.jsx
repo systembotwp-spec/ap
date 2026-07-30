@@ -67,8 +67,13 @@ const uniqueSorted = (items) =>
 const isActiveStatus = (value) =>
   ["activo", "inactivo", "agotado"].includes(normalize(value));
 
-const looksLikeImageUrl = (value) =>
-  /^https?:\/\//i.test((value || "").toString());
+const looksLikeImageUrl = (value) => {
+  const text = (value || "").toString().trim();
+  if (!text) return false;
+  if (/^https?:\/\//i.test(text)) return true;
+  // Nombre de archivo de imagen (se sirve desde la misma raíz que el logo/banner)
+  return /\.(png|jpe?g|webp|gif|avif|svg)(\?.*)?$/i.test(text);
+};
 
 const isFeaturedProduct = (product) => {
   const value = normalize(product.tag3);
@@ -99,6 +104,23 @@ const normalizeKey = (value = "") =>
 
 const FALLBACK_IMG =
   "https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=500&auto=format&fit=crop";
+
+/**
+ * Raíz única donde viven los assets estáticos del sitio: el logo, el banner
+ * y ahora también las fotos de producto. Todos se suben al mismo repositorio
+ * de GitHub, en la raíz publicada. Si algún día cambia dónde se alojan
+ * (por ejemplo a raw.githubusercontent.com o a un CDN), basta con actualizar
+ * este único valor y logo, banner y catálogo quedan apuntando al lugar
+ * correcto sin tocar nada más.
+ */
+const ASSETS_BASE_URL = "/";
+
+/** Arma la URL final de un asset a partir de su nombre de archivo. */
+const assetUrl = (filename) => {
+  const clean = String(filename || "").trim().replace(/^\/+/, "");
+  if (!clean) return "";
+  return `${ASSETS_BASE_URL}${encodeURIComponent(clean)}`;
+};
 
 /**
  * Normaliza una URL de imagen tal como llega desde Google Sheets.
@@ -134,6 +156,22 @@ const normalizeImageUrl = (raw) => {
   if (driveId) return `https://drive.google.com/thumbnail?id=${driveId}&sz=w1000`;
 
   return url;
+};
+
+/**
+ * Resuelve la imagen de un producto tal como llega desde la columna del
+ * Sheet. Ahora el Sheet guarda solo el NOMBRE del archivo (p. ej.
+ * "rollos_bolsas_pawise.png"), que debe existir subido al repositorio en
+ * la misma raíz que el logo y el banner — se arma la URL con assetUrl().
+ * Si una fila antigua todavía trae una URL completa (http/https), se
+ * respeta y se le sigue aplicando normalizeImageUrl() por compatibilidad.
+ */
+const productImageUrl = (raw) => {
+  if (!raw) return "";
+  const value = String(raw).trim().replace(/^["']|["']$/g, "");
+  if (!value) return "";
+  if (/^https?:\/\//i.test(value)) return normalizeImageUrl(value);
+  return assetUrl(value);
 };
 
 /**
@@ -197,6 +235,11 @@ const getProductVariants = (p) =>
      id | nombre | descripcion | categoria | subcategoria |
      presentacion | etiqueta1 | etiqueta2 | etiqueta3 | precioVenta |
      precioOferta | estado | imagen1 | imagen2 | imagen3
+
+   imagen1/2/3: solo el NOMBRE del archivo (ej. "rollos_bolsas_pawise.png").
+   La imagen debe estar subida al repositorio en la misma raíz que el logo
+   y el banner (ver ASSETS_BASE_URL). También se acepta, por compatibilidad
+   con filas antiguas, una URL completa (http/https) en esa misma columna.
 ════════════════════════════════════════════════════════ */
 export const rowToProduct = (row) => {
   const hasTag3Column = row.length > 14 || isActiveStatus(row[11]) || !looksLikeImageUrl(row[11]);
@@ -210,7 +253,7 @@ export const rowToProduct = (row) => {
     toMoneyNumber(row[salePriceIndex])
   );
   const images = [row[imageStartIndex], row[imageStartIndex + 1], row[imageStartIndex + 2]]
-    .map(normalizeImageUrl)
+    .map(productImageUrl)
     .filter(Boolean);
 
   return {
@@ -2511,7 +2554,7 @@ const handleCheckout = useCallback(async () => {
 
       {/* NAV */}
       <nav className="nav">
-        <img className="nav-logo tap" src="/AMIGO_LOGO.png" alt="ElAmigodelPerro — volver al inicio" onClick={() => goTo("inicio")} />
+        <img className="nav-logo tap" src={assetUrl("AMIGO_LOGO.png")} alt="ElAmigodelPerro — volver al inicio" onClick={() => goTo("inicio")} />
         <div className="nav-links">
           <button className={`nav-link tap ${view==="inicio"?"active":""}`} onClick={() => goTo("inicio")}>Inicio</button>
           <button className={`nav-link tap ${view==="catalogo"?"active":""}`} onClick={() => goTo("catalogo")}>Tienda</button>
@@ -2590,7 +2633,7 @@ const handleCheckout = useCallback(async () => {
         <>
           {/* Hero desktop */}
           <div className="hero">
-            <img className="hero-img" src="/ap-banner.png"
+            <img className="hero-img" src={assetUrl("ap-banner.png")}
               alt="ElAmigodelPerro — Todo lo que tu mascota necesita en un solo lugar" />
             <div className="hero-overlay" aria-hidden="true">
               <div className="hero-content">
