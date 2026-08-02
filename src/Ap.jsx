@@ -7,7 +7,7 @@ import {
   FileText, RefreshCw, Lock, Eye, ChevronLeft,
   Calendar, Repeat, Gift,
   ClipboardList, Menu, Package, RotateCcw,
-  Home, GraduationCap, Sparkles, Sun, CheckCircle2
+  Home, GraduationCap, Sparkles, Sun, CheckCircle2, ChevronDown
 } from "lucide-react";
 
 /* ════════════════════════════════════════════════════════
@@ -1803,22 +1803,24 @@ const injectStyles = () => (
       display:flex; align-items:center; gap:12px; padding:22px 24px 4px;
     }
     .adiestra-modal-title { font-family:var(--f-display); font-size:20px; font-weight:600; color:${C.redDark}; }
-    .adiestra-tabs {
-      display:flex; gap:8px; overflow-x:auto; scroll-snap-type:x mandatory;
-      scrollbar-width:none; -webkit-overflow-scrolling:touch; touch-action:pan-x;
+    .adiestra-select-wrap {
+      display:flex; flex-direction:column; gap:6px;
       padding:14px 24px 4px; margin-bottom:4px;
     }
-    .adiestra-tabs::-webkit-scrollbar { display:none; }
-    .adiestra-tab {
-      flex:0 0 auto; scroll-snap-align:start; cursor:pointer;
-      padding:9px 18px; border-radius:50px; border:1.5px solid ${C.redPale};
-      background:#fff; color:${C.redDark};
-      font-family:var(--f-body); font-size:13px; font-weight:var(--w-semi);
-      transition:background .2s, color .2s, border-color .2s;
-      white-space:nowrap;
+    .adiestra-select-field { position:relative; }
+    .adiestra-select {
+      width:100%; appearance:none; -webkit-appearance:none;
+      padding:13px 42px 13px 16px; border-radius:12px; border:1.5px solid ${C.redPale};
+      background:#fff; color:${C.redDark}; cursor:pointer;
+      font-family:var(--f-body); font-size:15px; font-weight:var(--w-bold);
+      transition:border-color .2s, box-shadow .2s;
     }
-    .adiestra-tab.active { background:${C.redDark}; color:#fff; border-color:${C.redDark}; }
-    .adiestra-tab:not(.active):hover { background:${C.redMist}; }
+    .adiestra-select:hover { border-color:${C.redLight}; }
+    .adiestra-select:focus { outline:none; border-color:${C.redMid}; box-shadow:0 0 0 3px rgba(158,42,47,.12); }
+    .adiestra-select-chevron {
+      position:absolute; right:14px; top:50%; transform:translateY(-50%);
+      color:${C.redDark}; pointer-events:none;
+    }
     .adiestra-modal-body { display:flex; flex-direction:column; gap:16px; }
     .adiestra-plan-title { font-family:var(--f-display); font-size:17px; font-weight:600; color:${C.text}; }
     .adiestra-meta-row { display:flex; flex-direction:column; gap:12px; }
@@ -3028,7 +3030,7 @@ const handleCheckout = useCallback(async () => {
                     className="servicio-detalle-btn tap"
                     onClick={() => setShowAdiestramientoModal(true)}
                   >
-                    Ver detalle <ChevronRight size={14} aria-hidden="true" />
+                    Ver detallado <ChevronRight size={14} aria-hidden="true" />
                   </button>
                 )}
 
@@ -3844,22 +3846,25 @@ function AdiestramientoDetailModal({ onClose }) {
           <h2 className="adiestra-modal-title" id="adiestramiento-modal-h">Planes de Adiestramiento</h2>
         </div>
 
-        {/* Etiquetas — scroll horizontal, una por tipo de adiestramiento */}
-        <div className="adiestra-tabs" role="tablist" aria-label="Tipos de adiestramiento">
-          {ADIESTRAMIENTO_PLANES.map((item) => (
-            <button
-              key={item.id}
-              role="tab"
-              aria-selected={item.id === activeId}
-              className={`adiestra-tab tap ${item.id === activeId ? "active" : ""}`}
-              onClick={() => setActiveId(item.id)}
+        {/* Selector desplegable — un plan de adiestramiento a la vez */}
+        <label className="adiestra-select-wrap">
+          <span className="filter-label">Tipo de adiestramiento</span>
+          <div className="adiestra-select-field">
+            <select
+              className="adiestra-select"
+              value={activeId}
+              onChange={(event) => setActiveId(event.target.value)}
+              aria-label="Selecciona el tipo de adiestramiento"
             >
-              {item.tag}
-            </button>
-          ))}
-        </div>
+              {ADIESTRAMIENTO_PLANES.map((item) => (
+                <option key={item.id} value={item.id}>{item.tag}</option>
+              ))}
+            </select>
+            <ChevronDown size={18} className="adiestra-select-chevron" aria-hidden="true" />
+          </div>
+        </label>
 
-        <div className="pdmodal-body adiestra-modal-body" role="tabpanel">
+        <div className="pdmodal-body adiestra-modal-body">
           <h3 className="adiestra-plan-title">{plan.titulo}</h3>
 
           <div className="adiestra-meta-row">
