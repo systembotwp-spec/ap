@@ -844,8 +844,7 @@ const SERVICIOS = [
       "Acompañamiento permanente las 24 horas",
       "Actividades programadas para el día correspondiente",
       "Recreación dirigida",
-      "Spa",
-      "Modificación de Comportamiento (Valor según Evaluación)",
+      "Si el peludito requiere Modificación de Comportamiento, tendra un Valor adicional según valoración",
     ],
     precio: [
       { label: "Cachorros", valor: "$900.000" },
@@ -887,6 +886,88 @@ const SERVICIOS = [
     ],
     precio: [],
     nota: "El transporte tiene un valor adicional que depende del lugar donde esté ubicada la vivienda del perrit@.",
+  },
+];
+
+/* ════════════════════════════════════════════════════════
+   PLANES DE ADIESTRAMIENTO — detalle (fuente: DC-08 Planes de
+   Adiestramiento). Se muestran como 3 etiquetas navegables en
+   scroll horizontal dentro del detalle del servicio.
+════════════════════════════════════════════════════════ */
+const ADIESTRAMIENTO_NOTA =
+  "Si tu peludit@ requiere modificación de comportamiento, este proceso tendrá un valor adicional según la valoración inicial.";
+
+const ADIESTRAMIENTO_PLANES = [
+  {
+    id: "cachorros",
+    tag: "Cachorros",
+    titulo: "Adiestramiento para Cachorros",
+    edad: "Entre 3 y 5 meses",
+    duracion: "15 días en las instalaciones, con el compromiso de 1 visita semanal por parte de los propietarios y 1 visita en casa por parte del entrenador después de terminar el proceso.",
+    actividades: [
+      "Ejercicios de comunicación",
+      "Ejercicios de autocontrol",
+      "Aprendizaje de comunicación: NO, HEY, MUY BIEN, MAL, el nombre y AQUÍ",
+      "Ejercicio del collar y la correa",
+      "Pista de sensibilización (en nuestras instalaciones)",
+      "Juegos de olfato",
+    ],
+    logros: [
+      "Disciplina y autocontrol para la convivencia en familia",
+      "Seguridad en sí mismo",
+      "Manejo adecuado de las emociones",
+      "Conocimiento de todas las partes de su cuerpo",
+      "Socialización",
+      "Manejo claro de la comunicación para transmitirle las normas de convivencia en casa",
+      "Manejo adecuado del collar y la correa",
+    ],
+    precio: "$900.000",
+  },
+  {
+    id: "basico",
+    tag: "Básico",
+    titulo: "Adiestramiento en Obediencia Básica",
+    edad: "Mayor a 5 meses",
+    duracion: "25 días en nuestras instalaciones, con el compromiso de 1 visita semanal por parte de los propietarios y 4 visitas en casa por parte del entrenador después de terminar el proceso.",
+    actividades: [
+      "Código de comunicación: NO, HEY, MUY BIEN, MAL, el nombre y AQUÍ",
+      "Manejo de collar y correa",
+      "Aprendizaje de la conducta \"sentado\"",
+      "Comprensión de la conducta \"sentado\"",
+      "Trabajo con conducta conocida",
+    ],
+    logros: [
+      "Disciplina y autocontrol para la convivencia",
+      "Manejo de collar y correa",
+      "Conducta: Sentado",
+      "Educación para la convivencia",
+    ],
+    precio: "$1.150.000",
+  },
+  {
+    id: "avanzado",
+    tag: "Avanzado",
+    titulo: "Adiestramiento en Obediencia Avanzada",
+    edad: "Mayor a 5 meses",
+    duracion: "35 días en nuestras instalaciones, con el compromiso de 1 visita semanal por parte de los propietarios y 4 visitas en casa por parte del entrenador después de terminar el proceso.",
+    actividades: [
+      "Código de comunicación: NO, HEY, MUY BIEN, MAL, el nombre y AQUÍ",
+      "Manejo de collar y correa",
+      "Manipulaciones con las manos",
+      "Espacios de juego",
+      "Aprendizaje de las conductas indicadas (sentado y tumbado)",
+      "Comprensión de las conductas",
+      "Trabajo con conducta conocida",
+    ],
+    logros: [
+      "Disciplina y autocontrol para la convivencia",
+      "Caminar sin jalar de la correa",
+      "Llamada",
+      "Sentado y tumbado",
+      "Permanencia en sentado y tumbado con y sin la presencia del dueño",
+      "Educación para la convivencia",
+    ],
+    precio: "$1.600.000",
   },
 ];
 
@@ -1568,6 +1649,17 @@ const injectStyles = () => (
     .wa-btn { position:fixed; bottom:28px; right:22px; background:${C.whatsapp}; color:#fff; width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(37,211,102,.4); z-index:999; text-decoration:none; transition:transform .2s, box-shadow .2s; }
     .wa-btn:hover { transform:scale(1.08); box-shadow:0 8px 28px rgba(37,211,102,.5); }
 
+    /* ── Lupa flotante: salta a los filtros del catálogo ── */
+    .filtros-fab {
+      position:fixed; bottom:96px; right:22px; z-index:998;
+      width:48px; height:48px; border-radius:50%; border:none; cursor:pointer;
+      background:${C.redDark}; color:#fff;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 6px 20px rgba(107,20,35,.35);
+      transition:transform .2s, box-shadow .2s;
+    }
+    .filtros-fab:hover { transform:scale(1.08); box-shadow:0 8px 28px rgba(107,20,35,.45); }
+
     /* ── FOOTER ── */
     .footer {
       background:${C.redDark}; padding:18px 5%;
@@ -1695,6 +1787,55 @@ const injectStyles = () => (
       transition:background .2s, transform .2s;
     }
     .servicio-reservar-btn:hover { background:#1fb956; transform:translateY(-1px); }
+
+    .servicio-detalle-btn {
+      display:flex; align-items:center; justify-content:center; gap:6px;
+      margin:14px 20px 0; padding:11px; border-radius:50px;
+      background:#fff; color:${C.redDark}; border:1.5px solid ${C.redPale};
+      cursor:pointer; font-family:var(--f-body); font-size:var(--t-btn); font-weight:var(--w-bold);
+      transition:background .2s, border-color .2s, transform .2s;
+    }
+    .servicio-detalle-btn:hover { background:${C.redMist}; border-color:${C.redLight}; transform:translateY(-1px); }
+
+    /* ── Modal de detalle de Adiestramiento ── */
+    .adiestra-modal { max-width:560px; }
+    .adiestra-modal-head {
+      display:flex; align-items:center; gap:12px; padding:22px 24px 4px;
+    }
+    .adiestra-modal-title { font-family:var(--f-display); font-size:20px; font-weight:600; color:${C.redDark}; }
+    .adiestra-tabs {
+      display:flex; gap:8px; overflow-x:auto; scroll-snap-type:x mandatory;
+      scrollbar-width:none; -webkit-overflow-scrolling:touch; touch-action:pan-x;
+      padding:14px 24px 4px; margin-bottom:4px;
+    }
+    .adiestra-tabs::-webkit-scrollbar { display:none; }
+    .adiestra-tab {
+      flex:0 0 auto; scroll-snap-align:start; cursor:pointer;
+      padding:9px 18px; border-radius:50px; border:1.5px solid ${C.redPale};
+      background:#fff; color:${C.redDark};
+      font-family:var(--f-body); font-size:13px; font-weight:var(--w-semi);
+      transition:background .2s, color .2s, border-color .2s;
+      white-space:nowrap;
+    }
+    .adiestra-tab.active { background:${C.redDark}; color:#fff; border-color:${C.redDark}; }
+    .adiestra-tab:not(.active):hover { background:${C.redMist}; }
+    .adiestra-modal-body { display:flex; flex-direction:column; gap:16px; }
+    .adiestra-plan-title { font-family:var(--f-display); font-size:17px; font-weight:600; color:${C.text}; }
+    .adiestra-meta-row { display:flex; flex-direction:column; gap:12px; }
+    .adiestra-meta p {
+      font-family:var(--f-body); font-size:var(--t-meta); color:${C.text}; line-height:1.55; margin-top:3px;
+    }
+    .adiestra-col { display:flex; flex-direction:column; }
+    .adiestra-precio-box {
+      background:${C.redMist}; border:1.5px solid ${C.redPale}; border-radius:14px;
+      padding:14px 16px; text-align:center;
+    }
+    .adiestra-precio-valor { font-family:var(--f-display); font-size:22px; font-weight:700; color:${C.redDark}; margin-top:2px; }
+    .adiestra-nota { padding:0; background:${C.redMist}; border-radius:10px; padding:10px 12px; }
+    @media (min-width:600px) {
+      .adiestra-meta-row { flex-direction:row; gap:24px; }
+      .adiestra-meta { flex:1; }
+    }
 
     .servicios-cta {
       max-width:640px; margin:56px auto 0; text-align:center; padding:36px 24px;
@@ -2100,6 +2241,7 @@ export default function App() {
   const [cart, setCart]             = usePersistedCart();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showAdiestramientoModal, setShowAdiestramientoModal] = useState(false);
   const [view, setView]             = useState("inicio");
   const [policyView, setPolicyView] = useState(null); // "envios" | "devoluciones" | "datos"
   const [filterPet, setFilterPet]   = useState("");
@@ -2732,6 +2874,18 @@ const handleCheckout = useCallback(async () => {
       {/* ══ CATÁLOGO ══ */}
       {view === "catalogo" && (
         <section className="section section-alt" style={{paddingTop:40}} aria-labelledby="cat-h">
+          <button
+            className="filtros-fab tap"
+            onClick={() => {
+              const el = document.getElementById("catalogo-filtros");
+              if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+            aria-label="Ir a los filtros de producto"
+            title="Ir a los filtros"
+          >
+            <Search size={20} aria-hidden="true" />
+          </button>
+
           <div className="section-header">
             <span className="eyebrow">Catálogo</span>
             <h2 className="section-title" id="cat-h">Todos los <em>Productos</em></h2>
@@ -2750,7 +2904,7 @@ const handleCheckout = useCallback(async () => {
             />
           </div>
 
-          <div className="filters-grid" aria-label="Filtros del catálogo">
+          <div className="filters-grid" id="catalogo-filtros" aria-label="Filtros del catálogo">
             <label className="filter-field">
               <span className="filter-label">Categoría</span>
               <select
@@ -2869,6 +3023,15 @@ const handleCheckout = useCallback(async () => {
 
                 {nota && <p className="servicio-nota">{nota}</p>}
 
+                {id === "adiestramiento" && (
+                  <button
+                    className="servicio-detalle-btn tap"
+                    onClick={() => setShowAdiestramientoModal(true)}
+                  >
+                    Ver plan detallado <ChevronRight size={14} aria-hidden="true" />
+                  </button>
+                )}
+
                 <a
                   className="servicio-reservar-btn tap"
                   href={waLink(`Hola, quiero mas información sobre el servicio de ${title} para mi mascota 🐾`)}
@@ -2906,6 +3069,11 @@ const handleCheckout = useCallback(async () => {
             </div>
           </div>
         </section>
+      )}
+
+      {/* Modal de detalle del plan de Adiestramiento */}
+      {showAdiestramientoModal && (
+        <AdiestramientoDetailModal onClose={() => setShowAdiestramientoModal(false)} />
       )}
 
       {view === "mipedido" && (
@@ -3634,6 +3802,109 @@ function FeaturedScroll({ products, onAdd }) {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   ADIESTRAMIENTO DETAIL MODAL
+   Se abre al hacer click en "Ver plan detallado" de la tarjeta
+   de Adiestramiento. Muestra 3 etiquetas (Cachorros, Básico,
+   Avanzado) navegables en scroll horizontal; cada una con su
+   edad, duración, actividades, logros, precio y la observación
+   sobre modificación de comportamiento.
+════════════════════════════════════════════════════════ */
+function AdiestramientoDetailModal({ onClose }) {
+  const [activeId, setActiveId] = useState(ADIESTRAMIENTO_PLANES[0].id);
+  const plan = ADIESTRAMIENTO_PLANES.find((item) => item.id === activeId) || ADIESTRAMIENTO_PLANES[0];
+
+  useBodyScrollLock(true);
+
+  useEffect(() => {
+    const onKeyDown = (event) => { if (event.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onClose]);
+
+  return (
+    <div
+      className="pdmodal-overlay"
+      onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="adiestramiento-modal-h"
+    >
+      <div className="pdmodal adiestra-modal">
+        <button className="pdmodal-close tap" onClick={onClose} aria-label="Cerrar">
+          <X size={18} aria-hidden="true" />
+        </button>
+
+        <div className="adiestra-modal-head">
+          <div className="servicio-icon-wrap" aria-hidden="true"><GraduationCap size={22} color="#fff" /></div>
+          <h2 className="adiestra-modal-title" id="adiestramiento-modal-h">Planes de Adiestramiento</h2>
+        </div>
+
+        {/* Etiquetas — scroll horizontal, una por tipo de adiestramiento */}
+        <div className="adiestra-tabs" role="tablist" aria-label="Tipos de adiestramiento">
+          {ADIESTRAMIENTO_PLANES.map((item) => (
+            <button
+              key={item.id}
+              role="tab"
+              aria-selected={item.id === activeId}
+              className={`adiestra-tab tap ${item.id === activeId ? "active" : ""}`}
+              onClick={() => setActiveId(item.id)}
+            >
+              {item.tag}
+            </button>
+          ))}
+        </div>
+
+        <div className="pdmodal-body adiestra-modal-body" role="tabpanel">
+          <h3 className="adiestra-plan-title">{plan.titulo}</h3>
+
+          <div className="adiestra-meta-row">
+            <div className="adiestra-meta">
+              <span className="servicio-col-label">Edad</span>
+              <p>{plan.edad}</p>
+            </div>
+            <div className="adiestra-meta">
+              <span className="servicio-col-label">Duración</span>
+              <p>{plan.duracion}</p>
+            </div>
+          </div>
+
+          <div className="adiestra-col">
+            <p className="servicio-col-label">Actividades a realizar</p>
+            <ul className="servicio-list">
+              {plan.actividades.map((linea, i) => <li key={i}>{linea}</li>)}
+            </ul>
+          </div>
+
+          <div className="adiestra-col">
+            <p className="servicio-col-label">Logros</p>
+            <ul className="servicio-list">
+              {plan.logros.map((linea, i) => <li key={i}>{linea}</li>)}
+            </ul>
+          </div>
+
+          <div className="adiestra-precio-box">
+            <span className="servicio-col-label">Precio — {plan.tag}</span>
+            <p className="adiestra-precio-valor">{plan.precio}</p>
+          </div>
+
+          <p className="servicio-nota adiestra-nota">{ADIESTRAMIENTO_NOTA}</p>
+
+          <a
+            className="servicio-reservar-btn tap"
+            href={waLink(`Hola, quiero más información sobre el plan de Adiestramiento ${plan.tag} para mi mascota 🐾`)}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <MessageCircle size={15} aria-hidden="true" />
+            Reservar {plan.tag} por WhatsApp
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
