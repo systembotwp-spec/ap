@@ -3028,7 +3028,7 @@ const handleCheckout = useCallback(async () => {
                     className="servicio-detalle-btn tap"
                     onClick={() => setShowAdiestramientoModal(true)}
                   >
-                    Ver plan detallado <ChevronRight size={14} aria-hidden="true" />
+                    Ver detalle <ChevronRight size={14} aria-hidden="true" />
                   </button>
                 )}
 
