@@ -3661,12 +3661,12 @@ const handleCheckout = useCallback(async () => {
                         <p className="amigo-name">El Amigo del Perro</p>
                         <p className="amigo-desc">
                           {recurringOrder
-                            ? "¡Tu 15% de descuento en estadías cortas ya está activo!"
-                            : "Activa el pedido programado y obtén 15% de descuento en la guardería."}
+                            ? "¡Tu 10% de descuento en estadías cortas ya está activo!"
+                            : "Activa el pedido programado y obtén 10% de descuento en la guardería."}
                         </p>
                       </div>
                       <div className="amigo-dcto-bubble">
-                        <span className="amigo-dcto-num">15%</span>
+                        <span className="amigo-dcto-num">10%</span>
                         <span className="amigo-dcto-off">dcto.</span>
                       </div>
                     </div>
