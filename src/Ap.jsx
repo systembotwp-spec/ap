@@ -856,7 +856,7 @@ const SERVICIOS = [
     id: "spa",
     icon: Sparkles,
     title: "Paquete de Spa",
-    desde: "Desde $75.000",
+    desde: "Desde $100.000",
     incluye: [
       "Transporte ida y regreso",
       "Día de sol",
@@ -870,11 +870,12 @@ const SERVICIOS = [
       "Colonia",
     ],
     precio: [
-      { label: "Perros pequeños", valor: "$75.000" },
-      { label: "Perros medianos", valor: "$80.000" },
-      { label: "Perros grandes",  valor: "$90.000" },
-      { label: "Perros gigantes", valor: "$120.000" },
+      { label: "Perros pequeños", valor: "$100.000" },
+      { label: "Perros medianos", valor: "$110.000" },
+      { label: "Perros grandes",  valor: "$130.000" },
+      { label: "Perros gigantes", valor: "$160.000" },
     ],
+    Nota: "Si el transporte es por fuera del área metropolitana, este tendrá un valor adicional. Ninguno de los paquetes de spa incluyen cortes en el pelaje, en caso de necesitarlo, este tiene un valor adicional y deben pedir el servicio con anterioridad y enviarnos una foto del perrit@ para enviarles la cotización con el valor del corte. Si el perrit@ necesita baño medicado o con un shampoo especial, este debe ser suministrado por el propietario y darnos las especificaciones o fórmula médica del veterinario."
   },
   {
     id: "transporte",
